@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">resource-19</string>
+    <string name="title_activity_splashscreen">splashscreen</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Add new resource</string>
+    <string name="title_notifications">Post help</string>
+</resources>

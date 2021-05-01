@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Register"
+    android:background="@drawable/whiteback">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/regtxt"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Register HERE "
+        android:textColor="@color/primary"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/regtxt"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="25dp"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:padding="20dp"
+        android:background="@drawable/primaryborder"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/regmobile"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/primaryborder"
+            android:gravity="center"
+            android:hint="ENTER Mobile No"
+            android:inputType="number"
+            android:maxLength="10"
+            android:textColor="@color/primary"
+            android:textColorHint="@color/primaryhint"
+            android:textSize="20dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/regpass"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_below="@+id/regemail"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/primaryborder"
+            android:gravity="center"
+            android:hint="ENTER PASSWORD"
+            android:textColor="@color/primary"
+            android:textColorHint="@color/primaryhint"
+            android:textSize="20dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/regname"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_below="@+id/regpass"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/primaryborder"
+            android:gravity="center"
+            android:hint="ENTER Name"
+            android:inputType="text"
+            android:textColor="@color/primary"
+            android:textColorHint="@color/primaryhint"
+            android:textSize="20dp" />
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/regcity"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_below="@+id/regpass"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/primaryborder"
+            android:gravity="center"
+            android:hint="ENTER City"
+            android:textColor="@color/primary"
+            android:textColorHint="@color/primaryhint"
+            android:textSize="20dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/regbtn"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_below="@+id/ll"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="55dp"
+            android:background="@drawable/botomdrawerback"
+            android:text="REGISTER"
+            android:textColor="@color/white"
+            android:textSize="25dp" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/reg2log"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="28dp"
+        android:padding="10dp"
+        android:text="Already Register Login Here"
+        android:textColor="@color/primary"
+        android:textSize="18dp" />
+
+
+</RelativeLayout>

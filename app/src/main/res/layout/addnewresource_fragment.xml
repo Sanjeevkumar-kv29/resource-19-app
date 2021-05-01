@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.Addnewresource_fragment">
+
+    <LinearLayout
+        android:id="@+id/myprogressbar"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_margin="50dp"
+        android:background="@drawable/whiteback"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="Plz wait Resurce adding..."
+            android:textSize="20dp"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollviewaddresources"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-284dp">
+
+
+        <LinearLayout
+            android:id="@+id/addresourceslyt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/primaryborder"
+            android:orientation="vertical"
+            android:padding="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Choose State"
+                android:textAlignment="textStart" />
+
+            <Spinner
+                android:id="@+id/spinnerselectState"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:dropDownWidth="fill_parent"
+                android:layout_margin="10dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/cityname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:hint="Enter City Name"
+                android:textAlignment="textStart" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Choose Resource Type"
+                android:textAlignment="textStart" />
+
+            <Spinner
+                android:id="@+id/spinnerselectresource"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:dropDownWidth="fill_parent"
+                android:background="@android:drawable/btn_dropdown"
+                android:padding="10dp" />
+
+
+            <EditText
+                android:id="@+id/providername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:hint="Enter provider name"
+                android:inputType="text"
+                android:autofillHints="none"
+                android:textAlignment="textStart" />
+
+            <EditText
+                android:id="@+id/providercontact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:hint="Enter provider's Contact no."
+                android:inputType="number"
+                android:maxLength="10"
+                android:textAlignment="textStart" />
+
+            <EditText
+                android:id="@+id/provideraddress"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_margin="15dp"
+                android:hint="Enter Provider's Address"
+                android:inputType="textMultiLine"
+                android:textAlignment="textStart" />
+
+
+            <EditText
+                android:id="@+id/verifiedby"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:hint="Verified BY"
+                android:textAlignment="textStart" />
+
+
+            <EditText
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_margin="15dp"
+                android:hint="Add Comment / More information"
+                android:inputType="textMultiLine"
+                android:textAlignment="textStart" />
+
+            <Button
+                android:id="@+id/addresourceBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/botomdrawerback"
+                android:padding="10dp"
+                android:text="Add Resource" />
+
+            <TextView
+                android:layout_width="75dp"
+                android:layout_height="75dp" />
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
