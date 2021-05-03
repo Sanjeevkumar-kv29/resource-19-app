@@ -10,4 +10,8 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Add new resource</string>
     <string name="title_notifications">Post help</string>
+
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="fcm_message">FCM Message</string>
+
 </resources>

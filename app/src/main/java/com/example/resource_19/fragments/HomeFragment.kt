@@ -209,7 +209,7 @@ class HomeFragment : Fragment() {
 
                     val City = context?.let { ArrayAdapter<String>(it,android.R.layout.simple_spinner_dropdown_item,CityNameArray) }
                     City?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    cityselectspinner!!.setAdapter(City)
+                    cityselectspinner?.setAdapter(City)
 
                 }
 

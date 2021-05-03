@@ -1,7 +1,9 @@
 package com.example.resource_19.fragments
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +11,15 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.resource_19.R
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.addnewresource_fragment.*
+import org.json.JSONException
+import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,9 +52,6 @@ class Addnewresource_fragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-
-
 
 
         StateSpinner = this.spinnerselectState
@@ -116,13 +121,6 @@ class Addnewresource_fragment : Fragment() {
 
                                 }
                                 else{
-                                    if (verifiedby.text.toString()!!.isNullOrEmpty()){
-                                        verifiedby.setError("Enter the name who are verifying it else enter none")
-                                        Toast.makeText(context,"Error encounter",Toast.LENGTH_SHORT).show()
-
-                                    }
-
-                                    else{
 
 
                                         Toast.makeText(context,"Please wait adding resource...",Toast.LENGTH_SHORT).show()
@@ -139,7 +137,7 @@ class Addnewresource_fragment : Fragment() {
 
                                         adddata["provideraddress"] = provideraddress.text.toString()
 
-                                        adddata["verifiedBY"] = verifiedby.text.toString()
+                                        adddata["verifiedBY"] = "not"
 
                                         adddata["comment"] = comment.text.toString()
 
@@ -150,7 +148,7 @@ class Addnewresource_fragment : Fragment() {
                                         addUploadRecordToDb(adddata)
                                         myprogressbar.visibility = View.VISIBLE
 
-                                    }
+
                                 }
                             }
                         }
@@ -184,6 +182,7 @@ class Addnewresource_fragment : Fragment() {
 
                 Toast.makeText(context, "ADDED Successfully", Toast.LENGTH_LONG).show()
                 myprogressbar.visibility = View.GONE
+                sendnoti(context)
 
             }
             .addOnFailureListener { e ->
@@ -192,5 +191,46 @@ class Addnewresource_fragment : Fragment() {
             }
     }
 
+
+
+
+
+    fun sendnoti(context: Context?){
+
+        val mRequestQue: RequestQueue = Volley.newRequestQueue(context)
+
+        val json = JSONObject()
+        try {
+
+            Log.d("massaging", "sending request ")
+
+            val notificationObj = JSONObject()
+            notificationObj.put("title", "Verification Request..")
+            notificationObj.put("body", "Please verify and approve New resource added by some one")
+            //replace notification with data when went send data
+            json.put("to", "/topics/newresourceadded")
+            json.put("data", notificationObj)
+            json.put("priority","high" )
+
+            val URL = "https://fcm.googleapis.com/fcm/send"
+            val request: JsonObjectRequest = object : JsonObjectRequest(
+                Request.Method.POST, URL,
+                json,
+                { response -> Log.d("MUR", "onResponse: ") },
+                { error -> Log.d("MUR", "onError: " + error.networkResponse) }
+            ) {
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val header = HashMap<String, String>()
+                    header["content-type"] = "application/json"
+                    header["authorization"] = "key=AAAAsIYvIJw:APA91bFHvzAGe4n8UOnk-l5Y381jEOWn-ocGLLGzjQhkMBvNy-rFUHUWxfp8WVqNFZwjMi5kn0XJoAXgbIvMFAko-cq10HcwySjP-_0BDKUDUCliEr6UBAyb9kvI4cz9o18k7BzIFcER"
+                    return header
+                }
+            }
+            mRequestQue.add(request)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+    }
 
 }

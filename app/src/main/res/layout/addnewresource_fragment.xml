@@ -129,14 +129,6 @@
                 android:textAlignment="textStart" />
 
 
-            <EditText
-                android:id="@+id/verifiedby"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:hint="Verified BY"
-                android:textAlignment="textStart" />
-
 
             <EditText
                 android:id="@+id/comment"

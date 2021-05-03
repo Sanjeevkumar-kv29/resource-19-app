@@ -1,12 +1,9 @@
 package com.example.resource_19.fragments
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.NetworkInfo
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,37 +13,37 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.resource_19.Adapter.helppostadapter
-import com.example.resource_19.Adapter.resourcesadapter
-import com.example.resource_19.MainActivity
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.example.resource_19.Adapter.Helppostadapter
 import com.example.resource_19.R
+import com.example.resource_19.dataClasses.HelpPostDetailsDataClass
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_home_main_screen.*
 import kotlinx.android.synthetic.main.helppost_fragment.*
+import org.json.JSONException
+import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.coroutines.coroutineContext
 
 
 class Helppost_fragment : Fragment() {
 
+    /// sorts by timing
+    var TimeSorter = Comparator<HelpPostDetailsDataClass> { b1, b2 ->
+        b2.posttimeadded.compareTo(b1.posttimeadded, true)
+    }
 
-    private val posttitlename =  ArrayList<String>()
-    private val publishercityname = ArrayList<String>()
-    private val publishernamename = ArrayList<String>()
-    private val postbody =   ArrayList<String>()
-    private val posttimeadded =   ArrayList<String>()
+    var PostDetails = arrayListOf<HelpPostDetailsDataClass>()
 
 
     var deletepostsp: Spinner? = null
     private val postlistfordelete =   ArrayList<String>()
-
-
-
 
 
     override fun onCreateView(
@@ -145,7 +142,7 @@ class Helppost_fragment : Fragment() {
             }
             else{
 
-                deleteselectedpost(deletepostspinner.selectedItem.toString(),currentusermobile)
+                deleteselectedpost(deletepostspinner.selectedItem.toString())
 
             }
 
@@ -162,13 +159,6 @@ class Helppost_fragment : Fragment() {
         publishermobile: String,
         publishercity: String
          ) {
-
-        posttitlename.reverse()
-        publishercityname.reverse()
-        publishernamename.reverse()
-        posttimeadded.reverse()
-        postbody.reverse()
-
         val db = FirebaseFirestore.getInstance()
 
         val datamap:MutableMap<String,Any> = HashMap<String,Any>()
@@ -189,13 +179,15 @@ class Helppost_fragment : Fragment() {
             .set(datamap)
             .addOnSuccessListener { documentReference ->
 
-                posttitlename.add(datamap["posttitle"].toString())
+                /*posttitlename.add(datamap["posttitle"].toString())
                 publishernamename.add(datamap["publishername"].toString())
                 publishercityname.add(datamap["publishercity"].toString())
                 postbody.add(datamap["postbody"].toString())
-                posttimeadded.add(date.take(22))
+                posttimeadded.add(date.take(22))*/
+
                 Toast.makeText(context, "ADDED Successfully", Toast.LENGTH_LONG).show()
-                postfoorvadap()
+                gettingpostdetails()
+                sendnoti(context,publishercity,posttitle,postbodyvalue)
                 //refreshfrag(Helppost_fragment())
 
 
@@ -214,11 +206,7 @@ class Helppost_fragment : Fragment() {
     private fun gettingpostdetails() {
 
         val db = FirebaseFirestore.getInstance()
-        posttitlename.clear()
-        publishercityname.clear()
-        publishernamename.clear()
-        posttimeadded.clear()
-        postbody.clear()
+        PostDetails.clear()
 
         db.collection("HELP-POSTS").addSnapshotListener {
                 snapshot, e ->
@@ -234,17 +222,22 @@ class Helppost_fragment : Fragment() {
                 documents.forEach {
 
 
-                    if (posttimeadded.contains(it.id.take(22)))
+                   /* if (PostDetails.posttimeadded.contains(it.id.take(22)))
 
                     else{
 
-                        posttitlename.add(it.get("posttitle").toString())
-                        publishernamename.add(it.get("publishername").toString())
-                        publishercityname.add(it.get("publishercity").toString())
-                        postbody.add(it.get("postbody").toString())
-                        posttimeadded.add(it.id.take(22))
 
-                    }
+
+                    }*/
+
+                    val postdata = HelpPostDetailsDataClass(
+                            it.get("posttitle").toString(),
+                            it.get("publishername").toString(),
+                            it.get("publishercity").toString(),
+                            it.get("postbody").toString(),
+                            it.id.take(22)
+                            )
+                    PostDetails.add(postdata)
 
                 }
 
@@ -253,11 +246,13 @@ class Helppost_fragment : Fragment() {
 
 
 
-                if (postbody.count()==0){
+                if (PostDetails.count()==0){
                     Toast.makeText(context,"No Posts Available or Network Error Plz try again", Toast.LENGTH_SHORT).show()
                 }
 
-                else{  postfoorvadap()  }
+                else{
+                    Collections.sort(PostDetails, TimeSorter)
+                    postfoorvadap()  }
 
             }
         }
@@ -266,7 +261,6 @@ class Helppost_fragment : Fragment() {
 //----------------------------------------------------------------getting post id for deleting--------------------------------------------------------------------------
 
     private fun gettingpostfordelete(currentusermobile:String) {
-
 
         postlistfordelete.clear()
         postlistfordelete.add("select")
@@ -292,13 +286,11 @@ class Helppost_fragment : Fragment() {
                         else{ postlistfordelete.add(it.id)}
 
                     }
-
                 }
-
 
             }
 
-            if (postbody.count()==0){ Toast.makeText(context,"No Posts Available or Network Error Plz try again", Toast.LENGTH_SHORT).show() }
+            if (postlistfordelete.count()==0){ Toast.makeText(context,"No Posts Available or Network Error Plz try again", Toast.LENGTH_SHORT).show() }
             else{ postfoorvadap() }
 
         }
@@ -309,9 +301,8 @@ class Helppost_fragment : Fragment() {
 
 //----------------------------------------------------------------------delete post from database-----------------------------------------------------------------------
 
-    private fun deleteselectedpost(postfordelete: String,currentusermobile: String) {
+    private fun deleteselectedpost(postfordelete: String) {
 
-        val docid = postfordelete+" by "+currentusermobile
 
         val db = FirebaseFirestore.getInstance()
         db.collection("HELP-POSTS").document(postfordelete)
@@ -334,30 +325,56 @@ class Helppost_fragment : Fragment() {
 
     private fun postfoorvadap() {
 
-        posttitlename.reverse()
-        publishercityname.reverse()
-        publishernamename.reverse()
-        posttimeadded.reverse()
-        postbody.reverse()
-
         val layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val recyclerView: RecyclerView = helppostRV
         recyclerView.layoutManager = layoutManager
-        val adapter = helppostadapter(
-                context,
-                posttitlename,
-                publishernamename,
-                publishercityname,
-                postbody,
-                posttimeadded)
-        Log.d("dodo",postbody.count().toString())
+        val adapter = Helppostadapter(context,PostDetails)
+        //Log.d("dodo",postbody.count().toString())
         recyclerView.adapter = adapter
 
 
     }
 
 
+
+    fun sendnoti(context: Context?,city: String,title: String,body: String){
+
+        val mRequestQue: RequestQueue = Volley.newRequestQueue(context)
+
+        val json = JSONObject()
+        try {
+
+            Log.d("massaging", "sending request ")
+
+            val notificationObj = JSONObject()
+            notificationObj.put("title", title)
+            notificationObj.put("body", body)
+            //replace notification with data when went send data
+            json.put("to", "/topics/${city}")
+            json.put("data", notificationObj)
+            json.put("priority","high" )
+
+            val URL = "https://fcm.googleapis.com/fcm/send"
+            val request: JsonObjectRequest = object : JsonObjectRequest(
+                Request.Method.POST, URL,
+                json,
+                { response -> Log.d("MUR", "onResponse: ") },
+                { error -> Log.d("MUR", "onError: " + error.networkResponse) }
+            ) {
+
+                override fun getHeaders(): MutableMap<String, String> {
+                    val header = HashMap<String, String>()
+                    header["content-type"] = "application/json"
+                    header["authorization"] = "key=AAAAsIYvIJw:APA91bFHvzAGe4n8UOnk-l5Y381jEOWn-ocGLLGzjQhkMBvNy-rFUHUWxfp8WVqNFZwjMi5kn0XJoAXgbIvMFAko-cq10HcwySjP-_0BDKUDUCliEr6UBAyb9kvI4cz9o18k7BzIFcER"
+                    return header
+                }
+            }
+            mRequestQue.add(request)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+    }
 
 
 

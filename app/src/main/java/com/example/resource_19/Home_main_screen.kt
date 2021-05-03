@@ -10,7 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.resource_19.Adapter.ResourceAdapter
 import com.example.resource_19.Adapter.resourcesadapter
+import com.example.resource_19.dataClasses.ResourceDataClass
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_home_main_screen.*
 import kotlinx.android.synthetic.main.addnewresource_fragment.*
@@ -19,7 +21,7 @@ import java.util.*
 
 class Home_main_screen : AppCompatActivity() {
 
-    private val resourceName =  ArrayList<String>()
+    /*private val resourceName =  ArrayList<String>()
     private val cityname = ArrayList<String>()
     private val statename = ArrayList<String>()
     private val providername =  ArrayList<String>()
@@ -27,7 +29,11 @@ class Home_main_screen : AppCompatActivity() {
     private val provideraddress =   ArrayList<String>()
     private val verifiedby =   ArrayList<String>()
     private val moredetail =  ArrayList<String>()
-    private val timeadded = ArrayList<String>()
+    private val timeadded = ArrayList<String>()*/          //--------------------  Replacing this all by one data class
+
+
+
+    private val ResourceDataList =  ArrayList<ResourceDataClass>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +43,7 @@ class Home_main_screen : AppCompatActivity() {
         toolbartitlehome.setText(resourceselected)
         selectedcity.setText("city - ${cityselected}")
         getalldata(cityselected,resourceselected)
+
 
 
         goback.setOnClickListener {
@@ -50,7 +57,8 @@ class Home_main_screen : AppCompatActivity() {
     private fun getalldata(city: String,resource: String) {
 
         val db = FirebaseFirestore.getInstance()
-        resourceName.clear()
+
+        /*resourceName.clear()
         cityname.clear()
         statename.clear()
         providername.clear()
@@ -58,7 +66,9 @@ class Home_main_screen : AppCompatActivity() {
         provideraddress.clear()
         verifiedby.clear()
         timeadded.clear()
-        moredetail.clear()
+        moredetail.clear()*/
+
+        ResourceDataList.clear()
 
         db.collection("ADDED-RESOURCES").addSnapshotListener {
                 snapshot, e ->
@@ -75,9 +85,9 @@ class Home_main_screen : AppCompatActivity() {
 
                     Log.w("state",it.get("city").toString(), e)
 
-                    if ((it.get("city").toString()==city) and (it.get("resource").toString()==resource)){
+                    if ((it.get("city").toString()==city) and (it.get("resource").toString()==resource) and (it.get("verifiedBY")!="not")){
 
-                        resourceName.add(it.get("resource").toString())
+                        /*resourceName.add(it.get("resource").toString())
                         cityname.add(it.get("city").toString())
                         statename.add(it.get("State").toString())
                         providername.add(it.get("providername").toString())
@@ -85,24 +95,40 @@ class Home_main_screen : AppCompatActivity() {
                         provideraddress.add(it.get("provideraddress").toString())
                         verifiedby.add(it.get("verifiedBY").toString())
                         timeadded.add(it.id.take(22))
-                        moredetail.add(it.get("comment").toString())
+                        moredetail.add(it.get("comment").toString())*/
+
+                        val getresources = ResourceDataClass(
+                                it.get("resource").toString(),
+                                it.get("city").toString(),
+                                it.get("State").toString(),
+                                it.get("providername").toString(),
+                                it.get("providercontact").toString(),
+                                it.get("provideraddress").toString(),
+                                it.get("verifiedBY").toString(),
+                                it.id.take(22),
+                                it.get("comment").toString()
+
+                        )
+
+                        ResourceDataList.add(getresources)
 
                     }
 
                 }
 
 
-                Log.w("details",resourceName.count().toString()+cityname.count().toString()+statename.count().toString()+providername.count().toString()+providercontact.count().toString()+provideraddress.count().toString(), e)
-                Log.w("details",verifiedby.count().toString()+timeadded.count().toString()+moredetail.count().toString(), e)
+                //Log.w("details",resourceName.count().toString()+cityname.count().toString()+statename.count().toString()+providername.count().toString()+providercontact.count().toString()+provideraddress.count().toString(), e)
+                //Log.w("details",verifiedby.count().toString()+timeadded.count().toString()+moredetail.count().toString(), e)
 
 
-                Log.w("cityfound", resourceName.toString(), e)
+                //Log.w("cityfound", resourceName.toString(), e)
 
-                if (resourceName.count()==0){
+                if (ResourceDataList.count()==0){
                     Toast.makeText(this,"No data Available or Network Error Plz try again", Toast.LENGTH_SHORT).show()
                 }
 
                 else{
+                    countresource.setText("Entries - "+ResourceDataList.count().toString())
                     foorvadap()
                 }
 
@@ -118,18 +144,19 @@ class Home_main_screen : AppCompatActivity() {
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         val recyclerView: RecyclerView = mainRV
         recyclerView.layoutManager = layoutManager
-        val adapter = resourcesadapter(
+        /*val adapter = resourcesadapter(
             this,
             resourceName,
             cityname,
-            statename,
+            statename,ResourceAdapter
             providername,
             providercontact,
             provideraddress,
             verifiedby,
             moredetail,
             timeadded
-        )
+        )*/
+        val adapter = ResourceAdapter(this, ResourceDataList)
         recyclerView.adapter = adapter
 
     }

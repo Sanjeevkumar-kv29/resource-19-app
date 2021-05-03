@@ -13,7 +13,7 @@
         android:id="@+id/toolbarlythome"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_margin="5dp"
+        android:layout_margin="3dp"
         android:background="@drawable/botomdrawerback"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal"
@@ -54,6 +54,17 @@
                 android:textSize="15dp" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/countresource"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Entries - 0"
+            android:textSize="10dp"
+            android:gravity="right"
+            android:padding="3dp"
+            android:textColor="@color/white"
+            />
 
     </LinearLayout>
 

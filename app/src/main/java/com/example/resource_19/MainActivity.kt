@@ -1,5 +1,6 @@
 package com.example.resource_19
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -13,11 +14,16 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.resource_19.Notification.FirebaseService
 import com.example.resource_19.fragments.Addnewresource_fragment
 import com.example.resource_19.fragments.Helppost_fragment
 import com.example.resource_19.fragments.HomeFragment
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
+
+var TOPIC = ""
 
 class MainActivity : AppCompatActivity()  {
 
@@ -28,15 +34,27 @@ class MainActivity : AppCompatActivity()  {
             setContentView(R.layout.activity_main)
 
 
-            openFragment(HomeFragment())
+            val sharepref: SharedPreferences = getSharedPreferences("uidpass",0)
+            currentuser = sharepref.getString("currentusermobile","").toString()
+            var currentusercity = sharepref.getString("city","").toString()
+
+
+            TOPIC = currentusercity
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+        FirebaseService.sharedPref = this.getSharedPreferences("sharedPreftoken", Context.MODE_PRIVATE)
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+            FirebaseService.token = it.token
+
+        }
+
+
+
+        openFragment(HomeFragment())
             navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
 
             profileicon.setOnClickListener {
 
-
-                val sharepref: SharedPreferences = getSharedPreferences("uidpass",0)
-                currentuser = sharepref.getString("currentusermobile","").toString()
 
                 if (currentuser == "") {
                     Toast.makeText(this,"You need to login first",Toast.LENGTH_LONG)
